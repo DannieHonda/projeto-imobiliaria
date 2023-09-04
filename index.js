@@ -5,15 +5,12 @@ const mysql = require('mysql2');
 const app = express();
 const port = 80;
 
-// Configurações de conexão com o banco de dados
 const connection = mysql.createConnection({
   host: process.env.HOST,
   user: process.env.USER,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
 });
-
-// Rota para testar a conexão com o banco de dados
 app.get('/testdb', (req, res) => {
   connection.connect((err) => {
     if (err) {
@@ -26,7 +23,7 @@ app.get('/testdb', (req, res) => {
   });
 });
 
-// Rota para a API de clientes "gold"
+// Rota para a API
 app.get('/api/gold_customers', (req, res) => {
   const GOLD_VALUE = 100;
 
@@ -57,8 +54,6 @@ app.get('/api/gold_customers', (req, res) => {
     }
   });
 });
-
-// Função para calcular os "gold customers"
 function calculateGoldCustomers(results, goldValue) {
   const customerPayments = new Map();
 
@@ -83,7 +78,6 @@ function calculateGoldCustomers(results, goldValue) {
   return goldCustomers;
 }
 
-// Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor iniciado na porta ${port}`);
 });
