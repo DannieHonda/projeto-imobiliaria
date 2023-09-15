@@ -11,8 +11,6 @@ const connection = mysql.createConnection({
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
 });
-
-// Rota para testar a conexão com o banco de dados
 app.get('/testdb', (req, res) => {
   connection.connect((err) => {
     if (err) {
@@ -56,7 +54,10 @@ app.get('/api/gold_customers', (req, res) => {
     }
   });
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> afbcbe7c54ae3957e64750b1e71abd5af854b764
 function calculateGoldCustomers(results, goldValue) {
   const customerPayments = new Map();
 
@@ -81,6 +82,7 @@ function calculateGoldCustomers(results, goldValue) {
   return goldCustomers;
 }
 
+<<<<<<< HEAD
 app.get('/api/payments_by_month_and_year', (req, res) => {
   const sql = `
     SELECT
@@ -113,6 +115,8 @@ app.get('/api/payments_by_month_and_year', (req, res) => {
 });
 
 
+=======
+>>>>>>> afbcbe7c54ae3957e64750b1e71abd5af854b764
 app.listen(port, () => {
   console.log(`Servidor iniciado na porta ${port}`);
 });
