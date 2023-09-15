@@ -3,9 +3,8 @@ const express = require('express');
 const mysql = require('mysql2');
 
 const app = express();
-const port = 80;
+const port = 8080;
 
-// Configurações de conexão com o banco de dados
 const connection = mysql.createConnection({
   host: process.env.HOST,
   user: process.env.USER,
@@ -26,7 +25,7 @@ app.get('/testdb', (req, res) => {
   });
 });
 
-// Rota para a API de clientes "gold"
+// Rota para a API
 app.get('/api/gold_customers', (req, res) => {
   const GOLD_VALUE = 100;
 
@@ -58,7 +57,6 @@ app.get('/api/gold_customers', (req, res) => {
   });
 });
 
-// Função para calcular os "gold customers"
 function calculateGoldCustomers(results, goldValue) {
   const customerPayments = new Map();
 
@@ -83,7 +81,38 @@ function calculateGoldCustomers(results, goldValue) {
   return goldCustomers;
 }
 
-// Iniciar o servidor
+app.get('/api/payments_by_month_and_year', (req, res) => {
+  const sql = `
+    SELECT
+        DATE_FORMAT(pag.data_do_pagamento, '%Y-%m') AS mes_ano,
+        SUM(pag.valor_pagamento) AS total_pagamento
+    FROM
+        pagamento pag
+    GROUP BY
+        mes_ano
+  `;
+
+  connection.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+    } else {
+      // Processar os resultados da consulta SQL
+      const paymentsByMonthAndYear = result.map((row) => ({
+        mes_ano: row.mes_ano,
+        total_pagamento: row.total_pagamento,
+      }));
+
+      //filtrar pagamentos
+      const minTotalValue = 100; // Valor mínimo desejado
+      const filteredPayments = paymentsByMonthAndYear.filter((payment) => payment.total_pagamento > minTotalValue);
+
+      // Filtrar pagamentos mês e ano
+      res.status(200).json(filteredPayments);
+    }
+  });
+});
+
+
 app.listen(port, () => {
   console.log(`Servidor iniciado na porta ${port}`);
 });
