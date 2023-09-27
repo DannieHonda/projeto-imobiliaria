@@ -54,10 +54,7 @@ app.get('/api/gold_customers', (req, res) => {
     }
   });
 });
-<<<<<<< HEAD
 
-=======
->>>>>>> afbcbe7c54ae3957e64750b1e71abd5af854b764
 function calculateGoldCustomers(results, goldValue) {
   const customerPayments = new Map();
 
@@ -82,7 +79,6 @@ function calculateGoldCustomers(results, goldValue) {
   return goldCustomers;
 }
 
-<<<<<<< HEAD
 app.get('/api/payments_by_month_and_year', (req, res) => {
   const sql = `
     SELECT
@@ -113,10 +109,49 @@ app.get('/api/payments_by_month_and_year', (req, res) => {
     }
   });
 });
+app.get('/api/porcentagem_de_vendas', function (req, res) {
+  const sql = `
+  select ti.categoria_imovel, valor_pagamento
+from tipo_imovel ti
+join pagamento pag on ti.id_imovel= pag.id_imovel;
+  `;
+  connection.query(sql, function (err, result) {
+    if (err) {
+      console.error('Erro ao executar a consulta SQL:', err);
+      res.status(500).send(JSON.stringify(err));
+    } else {
+      let sum = 0;
+      const percentages = new Map();
 
+      for (const row of result) {
+        sum += row.valor_pagamento;
+      }
 
-=======
->>>>>>> afbcbe7c54ae3957e64750b1e71abd5af854b764
+      for (const row of result) {
+        const categoriaDoImovel = row.categoria_imovel;
+        const valorPagamento = row.valor_pagamento;
+
+        const percentage = ((valorPagamento / sum) * 100).toFixed(3);
+
+        if (!percentages.has(categoriaDoImovel)) {
+          percentages.set(categoriaDoImovel, {
+            porcentagem: percentage,
+            categoria: categoriaDoImovel,
+          });
+        } else {
+          percentages.get(categoriaDoImovel).porcentagem  = (parseFloat(percentages.get(categoriaDoImovel).porcentagem) + parseFloat(percentage)).toFixed(3) + '%';   
+        }
+      }
+
+      const arrayPercentages = Array.from(percentages.values());
+    
+      // Enviar as porcentagens como JSON
+      res.status(200).json(arrayPercentages);
+    }
+  });
+});
+
+// Iniciar o servidor
 app.listen(port, () => {
   console.log(`Servidor iniciado na porta ${port}`);
 });
