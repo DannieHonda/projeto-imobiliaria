@@ -78,7 +78,10 @@ function calculateGoldCustomers(results, goldValue) {
 
   return goldCustomers;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8c58215a9827046d8a4aacbc81f4bef4919c0de3
 app.get('/api/payments_by_month_and_year', (req, res) => {
   const sql = `
     SELECT
@@ -123,6 +126,7 @@ join pagamento pag on ti.id_imovel= pag.id_imovel;
       let sum = 0;
       const percentages = new Map();
 
+<<<<<<< HEAD
       for (const row of result) {
         sum += row.valor_pagamento;
       }
@@ -152,6 +156,8 @@ join pagamento pag on ti.id_imovel= pag.id_imovel;
 });
 
 // Iniciar o servidor
+=======
+>>>>>>> 8c58215a9827046d8a4aacbc81f4bef4919c0de3
 app.listen(port, () => {
   console.log(`Servidor iniciado na porta ${port}`);
 });
